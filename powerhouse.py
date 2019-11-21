@@ -1,33 +1,18 @@
 import paho.mqtt.client as mqtt
-import configparser
 import time
 import schedule
 import threading
-import os
+from config import Config
 from switch import Switch
 from time import sleep
 
-# build path to config file
-thisFolder = os.path.dirname(os.path.abspath(__file__))
-configFile = os.path.join(thisFolder, 'config.ini')
-
 # read config file
-print("reading configuration : path="+configFile)
-config = configparser.ConfigParser()
-config.read(configFile)
-
-# mqtt config
-host = config.get('mqtt', 'host')
-port = config.getint('mqtt', 'port')
-topic_control = config.get('mqtt', 'topic_control')
-topic_status = config.get('mqtt', 'topic_status')
-
-# gpio config
-pin = config.getint('gpio', 'pin')
+config = Config()
+config.read()
 
 # init pin
 print("initializing switch...")
-switch = Switch(pin)
+switch = Switch(config.pin)
 
 # TEMP
 def run_threaded(job_func):
@@ -44,12 +29,11 @@ run_threaded(scheduler_thread)
 
 # The callback for when the client receives a CONNACK response from the server
 def on_connect(client, userdata, flags, rc):
-    print("connected  : topic="+topic_control+" : status="+str(rc))
+    print("connected  : topic="+config.topic_control+" : status="+str(rc))
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    client.subscribe(topic_control)
-
+    client.subscribe(config.topic_control)
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -85,16 +69,16 @@ def toggleOff():
 def publishStatus():
     print("publishStatus: "+str(switch.get_status()))
     if switch.get_status():
-        client.publish(topic_status, 'on')
+        client.publish(config.topic_status, 'on')
     else:
-        client.publish(topic_status, 'off')
+        client.publish(config.topic_status, 'off')
 
 # toggle the switch off
 toggleOff()
 
 # conntect mqtt
-print("connecting : host="+host+" : port="+str(port))
-client.connect(host, port, 60)
+print("connecting : host="+config.host+" : port="+str(config.port))
+client.connect(config.host, config.port, 60)
 
 # Blocking call that processes network traffic, dispatches callbacks and
 # handles reconnecting.
