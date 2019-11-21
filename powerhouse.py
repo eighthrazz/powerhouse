@@ -4,11 +4,8 @@ import time
 import schedule
 import threading
 import os
-from gpiozero import LED
+from switch import Switch
 from time import sleep
-
-# on/off status
-power_house_status = False
 
 # build path to config file
 thisFolder = os.path.dirname(os.path.abspath(__file__))
@@ -29,8 +26,8 @@ topic_status = config.get('mqtt', 'topic_status')
 pin = config.getint('gpio', 'pin')
 
 # init pin
-print("initializing pin...")
-switch = LED(pin)
+print("initializing switch...")
+switch = Switch(pin)
 
 # TEMP
 def run_threaded(job_func):
@@ -76,28 +73,21 @@ client.on_disconnect = on_disconnect
 def toggleOn():
     print("toggleOn")
     switch.on()
-    global power_house_status
-    power_house_status = True
     publishStatus()
 
 # toggle off
 def toggleOff():
     print("toggleOff")
     switch.off()
-    global power_house_status
-    power_house_status = False
     publishStatus()
 
 # publish status
 def publishStatus():
-    print("publishStatus: "+str(power_house_status))
-    if power_house_status:
+    print("publishStatus: "+str(switch.get_status()))
+    if switch.get_status():
         client.publish(topic_status, 'on')
     else:
         client.publish(topic_status, 'off')
-
-
-
 
 # toggle the switch off
 toggleOff()
