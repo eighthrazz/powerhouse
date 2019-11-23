@@ -2,3 +2,6 @@
 * $ pip3 install paho.mqtt
 * $ pip3 install configparser
 * $ pip3 install schedule
+* $ pip3 install flask
+
+

@@ -59,6 +59,7 @@ print("initializing switch...")
 switch = Switch(config.gpio_pin)
 
 # init status scheduler
+print("initializing scheduler...")
 status_scheduler = Scheduler(publishStatus, 3)
 
 # init MQTT

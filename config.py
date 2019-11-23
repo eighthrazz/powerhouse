@@ -9,6 +9,7 @@ class Config:
     mqtt_topic_status = None
     webhost_host = None
     webhost_port = None
+    webhost_listen = None
     gpio_pin = None
 
     def __init__(self):
@@ -29,8 +30,9 @@ class Config:
         self.mqtt_topic_status = config.get('mqtt', 'topic_status')
 
         # webhost config
-        self.webhost_host_host = config.get('webhost', 'host')
-        self.webhost_host_port = config.get('webhost', 'port')
+        self.webhost_host = config.get('webhost', 'host')
+        self.webhost_port = config.get('webhost', 'port')
+        self.webhost_listen = config.get('webhost', 'listen')
 
         # gpio config
         self.gpio_pin = config.getint('gpio', 'pin')

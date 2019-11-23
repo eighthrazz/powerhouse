@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 from flask_restful import Api, Resource, reqparse
 
 action_func = None
@@ -19,7 +19,7 @@ class WebHost():
         self.api.add_resource(Action, "/"+key)
 
     def connect(self):
-       self.app.run(debug=True, host=self.host, port=self.port)
+        self.app.run(debug=True, host=self.host, port=self.port)
 
 
 class Action(Resource):
