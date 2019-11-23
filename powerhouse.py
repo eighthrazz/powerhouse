@@ -6,14 +6,14 @@ from scheduler import Scheduler
 
 # The callback for when the client receives a CONNACK response from the server
 def on_connect(client, userdata, flags, rc):
-    print("connected  : topic="+config.topic_control+" : status="+str(rc))
+    print("connected  : topic="+config.mqtt_topic_control+" : status="+str(rc))
 
     # start posting the status to MQTT
     status_scheduler.start()
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    client.subscribe(config.topic_control)
+    client.subscribe(config.mqtt_topic_control)
 
 # callback when disconnect from MQTT server
 def on_disconnect():
@@ -46,9 +46,9 @@ def toggleOff():
 def publishStatus():
     print("publishStatus: "+str(switch.get_status()))
     if switch.get_status():
-        client.publish(config.topic_status, 'on')
+        client.publish(config.mqtt_topic_status, 'on')
     else:
-        client.publish(config.topic_status, 'off')
+        client.publish(config.mqtt_topic_status, 'off')
 
 # init and read configuration
 config = Config()
@@ -56,7 +56,7 @@ config.read()
 
 # init pin
 print("initializing switch...")
-switch = Switch(config.pin)
+switch = Switch(config.gpio_pin)
 
 # init status scheduler
 status_scheduler = Scheduler(publishStatus, 3)
@@ -72,8 +72,8 @@ client.on_disconnect = on_disconnect
 toggleOff()
 
 # conntect mqtt
-print("connecting : host="+config.host+" : port="+str(config.port))
-client.connect(config.host, config.port, 60)
+print("connecting : host="+config.mqtt_host+" : port="+str(config.mqtt_port))
+client.connect(config.mqtt_host, config.mqtt_port, 60)
 
 # Blocking call that processes network traffic, dispatches callbacks and
 # handles reconnecting.

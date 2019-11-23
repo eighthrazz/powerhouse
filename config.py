@@ -3,11 +3,13 @@ import os
 
 class Config:
     config_file = None
-    host = None
-    port = None
-    topic_control = None
-    topic_status = None
-    pin = None
+    mqtt_host = None
+    mqtt_port = None
+    mqtt_topic_control = None
+    mqtt_topic_status = None
+    webhost_host = None
+    webhost_port = None
+    gpio_pin = None
 
     def __init__(self):
         # build path to config file
@@ -21,10 +23,14 @@ class Config:
         config.read(self.configFile)
 
         # mqtt config
-        self.host = config.get('mqtt', 'host')
-        self.port = config.getint('mqtt', 'port')
-        self.topic_control = config.get('mqtt', 'topic_control')
-        self.topic_status = config.get('mqtt', 'topic_status')
+        self.mqtt_host = config.get('mqtt', 'host')
+        self.mqtt_port = config.getint('mqtt', 'port')
+        self.mqtt_topic_control = config.get('mqtt', 'topic_control')
+        self.mqtt_topic_status = config.get('mqtt', 'topic_status')
+
+        # webhost config
+        self.webhost_host_host = config.get('webhost', 'host')
+        self.webhost_host_port = config.get('webhost', 'port')
 
         # gpio config
-        self.pin = config.getint('gpio', 'pin')
+        self.gpio_pin = config.getint('gpio', 'pin')
