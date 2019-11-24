@@ -11,6 +11,7 @@ class Config:
     webhost_port = None
     webhost_listen = None
     gpio_pin = None
+    logging_dir = None
 
     def __init__(self):
         # build path to config file
@@ -19,7 +20,6 @@ class Config:
 
     def read(self):
         # read config file
-        print("reading configuration : path="+self.configFile)
         config = configparser.ConfigParser()
         config.read(self.configFile)
 
@@ -36,3 +36,6 @@ class Config:
 
         # gpio config
         self.gpio_pin = config.getint('gpio', 'pin')
+
+        # logging config
+        self.logging_dir = config.get('logging', 'dir')
